@@ -3,7 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>自然說易：易經演算系統 V22.5</title>
+    
+    <title>自然說易：易經演算系統 V22.5 - By 天王星</title>
+    <meta name="description" content="自然說易：專業、簡潔、免費的線上易經卜卦系統。支援六爻演算、本卦之卦解析、歷史紀錄匯出，提供流暢的數位易經占卜體驗。">
+    <meta name="keywords" content="易經, 卜卦, 占卜, 線上卜卦, 六爻, 自然說易, 天王星, 周易, 數位易經">
+    <meta name="author" content="天王星">
+    
+    <meta property="og:title" content="自然說易：易經演算系統 - By 天王星">
+    <meta property="og:description" content="最簡潔流暢的數位易經工具，支援手機震動與音量回饋，輕鬆記錄每一次占卜靈感。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sl7816-stack.github.io/Yi-jing/">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "自然說易：易經演算系統",
+      "operatingSystem": "Web",
+      "applicationCategory": "LifestyleApplication",
+      "author": {
+        "@type": "Person",
+        "name": "天王星"
+      },
+      "description": "提供線上易經六爻卜卦與演算的數位工具，具備歷史紀錄儲存與匯出功能。"
+    }
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --paper-bg: #F7F3ED; --dai-blue: #1A2F4B; --gold-border: #D4AF37; }
@@ -14,7 +39,6 @@
         .moving-mark { background: linear-gradient(135deg, #fff3b0 0%, #e6c200 100%); border: 1px solid var(--gold-border); padding: 0px 10px; border-radius: 4px; position: relative; }
         .moving-mark::after { content: "變"; position: absolute; right: -25px; top: 50%; transform: translateY(-50%); font-size: 12px; background: var(--gold-border); color: white; padding: 2px 4px; border-radius: 2px; }
         .mini-gua-line { font-size: 0.8rem; height: 8px; line-height: 1; gap: 2px; }
-        
         @keyframes pulse-border {
             0% { border-color: #cbd5e1; box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
             50% { border-color: var(--gold-border); box-shadow: 0 0 12px 2px rgba(212, 175, 55, 0.4); }
@@ -29,7 +53,7 @@
     <div class="mx-auto max-w-5xl bg-white shadow-2xl rounded-3xl overflow-hidden gold-card">
         <div class="bg-[#1A2F4B] p-6 text-white text-center relative">
             <h1 class="text-2xl md:text-3xl font-bold italic tracking-tighter">自然說易：易經演算系統 V22.5</h1>
-            <p class="text-slate-400 text-xs mt-1">By 天王星 | 基準：V21.4 | 方案 C 強化版</p>
+            <p class="text-slate-400 text-xs mt-1">By 天王星 | 數位演算 · 易學永傳</p>
             <button onclick="toggleMute()" id="muteBtn" class="absolute right-6 top-1/2 -translate-y-1/2 bg-white/10 p-2 rounded-full transition hover:bg-white/20">
                 <span id="muteIcon">🔊</span>
             </button>
@@ -102,33 +126,34 @@
         </div>
     </div>
 
+    <footer class="max-w-5xl mx-auto mt-8 p-6 text-slate-400 text-sm text-center">
+        <p>關於自然說易：這是一個基於《周易》六爻演算法的數位占卜工具。系統嚴格遵守老陽（9）、少陰（8）、少陽（7）、老陰（6）之成卦原理，並精準計算本卦與之卦（變卦）之關係，旨在為廣大易學愛好者提供一個流暢、美觀且具備數據備份功能的占卜環境。By 天王星。</p>
+    </footer>
+
     <script>
         let isMuted = localStorage.getItem('yijing_mute') === 'true';
         function toggleMute() { isMuted = !isMuted; localStorage.setItem('yijing_mute', isMuted); updateMuteUI(); }
         function updateMuteUI() { document.getElementById('muteIcon').innerText = isMuted ? "🔇" : "🔊"; }
 
-        // --- 方案 C：音量增壓 (2.5x) 與 觸控震動 (60ms) ---
+        // --- 核心：音量 2.5x + 震動 60ms ---
         function playSound(type) {
             if (isMuted) return;
             if (navigator.vibrate) navigator.vibrate(60);
-
             const ctx = new (window.AudioContext || window.webkitAudioContext)();
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
             osc.connect(gain); gain.connect(ctx.destination);
-            
             if(type === 'low') osc.frequency.setValueAtTime(180, ctx.currentTime);
             else if(type === 'high') osc.frequency.setValueAtTime(550, ctx.currentTime);
             else osc.frequency.setValueAtTime(280, ctx.currentTime);
-            
-            gain.gain.setValueAtTime(0.25, ctx.currentTime); // 放大至 2.5 倍
+            gain.gain.setValueAtTime(0.25, ctx.currentTime); 
             gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.5);
             osc.start(); osc.stop(ctx.currentTime + 0.5);
         }
 
-        // 數據基準：V21.4
+        // V21.4 卦象定義
         const baguaNames = { "111": "乾(天)", "000": "坤(地)", "110": "兌(澤)", "001": "艮(山)", "101": "離(火)", "010": "坎(水)", "100": "震(雷)", "011": "巽(風)" };
-        const yijingMap = { "111111": { name: "乾為天", id: "01" }, "000111": { name: "天地否", id: "12" }, "110111": { name: "天澤履", id: "10" }, "001111": { name: "天山遯", id: "33" }, "101111": { name: "天火同人", id: "13" }, "010111": { name: "天水訟", id: "06" }, "100111": { name: "天雷无妄", id: "25" }, "011111": { name: "天風姤", id: "44" }, "111000": { name: "地天泰", id: "11" }, "000000": { name: "坤為地", id: "02" }, "110000": { name: "地澤臨", id: "19" }, "001000": { name: "地山謙", id: "15" }, "101000": { name: "地火明夷", id: "36" }, "010000": { name: "地水師", id: "07" }, "100000": { name: "地雷復", id: "24" }, "011000": { name: "地風升", id: "46" }, "111110": { name: "澤天夬", id: "43" }, "000110": { name: "澤地萃", id: "45" }, "110110": { name: "兌為澤", id: "58" }, "001110": { name: "澤山咸", id: "31" }, "101110": { name: "澤火革", id: "49" }, "010110": { name: "澤水困", id: "47" }, "100110": { name: "澤雷隨", id: "17" }, "011110": { name: "澤風大過", id: "28" }, "111001": { name: "山天大畜", id: "26" }, "000001": { name: "山地剝", id: "23" }, "110001": { name: "山澤損", id: "41" }, "001001": { name: "艮為山", id: "52" }, "101001": { name: "山火賁", id: "22" }, "010001": { name: "山水蒙", id: "04" }, "100001": { name: "山雷頤", id: "27" }, "011001": { name: "山風蠱", id: "18" }, "111101": { name: "火天大有", id: "14" }, "000101": { name: "火地晉", id: "35" }, "110101": { name: "火澤睽", id: "38" }, "001101": { name: "火山旅", id: "56" }, "101101": { name: "離為火", id: "30" }, "010101": { name: "火水未濟", id: "64" }, "100101": { name: "火雷噬嗑", id: "21" }, "011101": { name: "火風鼎", id: "50" }, "111010": { name: "水天需", id: "05" }, "000010": { name: "水地比", id: "08" }, "110010": { name: "水澤節", id: "60" }, "001010": { name: "水山蹇", id: "39" }, "101010": { name: "水火既濟", id: "63" }, "010010": { name: "坎為水", id: "29" }, "100010": { name: "水雷屯", id: "03" }, "011010": { name: "水風井", id: "48" }, "111100": { name: "雷天大壯", id: "34" }, "000100": { name: "雷地豫", id: "16" }, "110100": { name: "雷澤歸妹", id: "54" }, "001100": { name: "雷山小過", id: "62" }, "101100": { name: "雷火豐", id: "55" }, "010100": { name: "雷水解", id: "40" }, "100100": { name: "震為雷", id: "51" }, "011100": { name: "雷風恒", id: "32" }, "111011": { name: "風天小畜", id: "09" }, "000011": { name: "風地觀", id: "20" }, "110011": { name: "風澤中孚", id: "61" }, "001011": { name: "風山漸", id: "53" }, "101011": { name: "風火家人", id: "37" }, "010011": { name: "風水渙", id: "59" }, "100011": { name: "風雷益", id: "42" }, "011011": { name: "巽為風", id: "57" } };
+        const yijingMap = { "111111": { name: "乾為天", id: "01" }, "000111": { name: "天地否", id: "12" }, "110111": { name: "天澤履", id: "10" }, "001111": { name: "天山遯", id: "33" }, "101111": { name: "天火同人", id: "13" }, "010111": { name: "天水訟", id: "06" }, "100111": { name: "天雷无妄", id: "25" }, "011111": { name: "天風姤", id: "44" }, "111000": { name: "地天泰", id: "11" }, "000000": { name: "坤為地", id: "02" }, "110000": { name: "地澤臨", id: "19" }, "001000": { name: "地山謙", id: "15" }, "101000": { name: "地火明夷", id: "36" }, "010000": { name: "地水師", id: "07" }, "100000": { name: "地雷復", id: "24" }, "011000": { name: "地風升", id: "46" }, "111110": { name: "澤天夬", id: "43" }, "000110": { name: "澤地萃", id: "45" }, "110110": { name: "兌為澤", id: "58" }, "001110": { name: "澤山咸", id: "31" }, "101110": { name: "澤火革", id: "49" }, "010110": { name: "澤水困", id: "47" }, "100110": { name: "澤雷隨", id: "17" }, "011110": { name: "澤風大過", id: "28" }, "111001": { name: "山天大畜", id: "26" }, "000001": { name: "山地剝", id: "23" }, "110001": { name: "山澤損", id: "41" }, "001001": { name: "艮為山", id: "52" }, "101001": { name: "山火賁", id: "22" }, "010001": { name: "山水蒙", id: "04" }, "100001": { name: "山雷頤", id: "27" }, "011001": { name: "山風蠱", id: "18" }, "111101": { name: "火天大有", id: "14" }, "000101": { name: "火地晉", id: "35" }, "110101": { name: "火澤睽", id: "38" }, "001101": { name: "火山旅", id: "56" }, "101101": { name: "離為火", id: "30" }, "010101": { name: "火水未濟", id: "64" }, "100101": { name: "火雷噬嗑", id: "21" }, "011101": { name: "火風鼎", id: "50" }, "111010": { name: "水天需", id: "05" }, "000010": { name: "水地比", id: "08" }, "110010": { name: "水澤節", id: "60" }, "001010": { name: "水山謙", id: "15" }, "101010": { name: "水火既濟", id: "63" }, "010010": { name: "坎為水", id: "29" }, "100010": { name: "水雷屯", id: "03" }, "011010": { name: "水風井", id: "48" }, "111100": { name: "雷天大壯", id: "34" }, "000100": { name: "雷地豫", id: "16" }, "110100": { name: "雷澤歸妹", id: "54" }, "001100": { name: "雷山小過", id: "62" }, "101100": { name: "雷火豐", id: "55" }, "010100": { name: "雷水解", id: "40" }, "100100": { name: "震為雷", id: "51" }, "011100": { name: "雷風恒", id: "32" }, "111011": { name: "風天小畜", id: "09" }, "000011": { name: "風地觀", id: "20" }, "110011": { name: "風澤中孚", id: "61" }, "001011": { name: "風山漸", id: "53" }, "101011": { name: "風火家人", id: "37" }, "010011": { name: "風水渙", id: "59" }, "100011": { name: "風雷益", id: "42" }, "011011": { name: "巽為風", id: "57" } };
 
         let historyData = [];
         const labels = ["初爻", "二爻", "三爻", "四爻", "五爻", "上爻"];
@@ -143,10 +168,10 @@
                 div.innerHTML = `<span class="w-16 text-[10px] font-bold text-slate-400">${labels[i]}</span>
                     <select id="yao-${i}" onchange="handleYaoChange(${i});" ${i===0?'':'disabled'} class="flex-1 bg-transparent p-1 font-bold outline-none cursor-pointer">
                         <option value="">請輸入</option>
-                        <option value="9">[ ⚫ ⚫ ⚫ ] 三正 / 老陽 / 9</option>
-                        <option value="8">[ ⚫ ⚫ 🔴 ] 二正一反 / 少陰 / 8</option>
-                        <option value="7">[ ⚫ 🔴 🔴 ] 一正二反 / 少陽 / 7</option>
-                        <option value="6">[ 🔴 🔴 🔴 ] 三反 / 老陰 / 6</option>
+                        <option value="9">[ ⚫ ⚫ ⚫ ] 老陽 / 9</option>
+                        <option value="8">[ ⚫ ⚫ 🔴 ] 少陰 / 8</option>
+                        <option value="7">[ ⚫ 🔴 🔴 ] 少陽 / 7</option>
+                        <option value="6">[ 🔴 🔴 🔴 ] 老陰 / 6</option>
                     </select>`;
                 if(i >= 3) uppDiv.appendChild(div); else lowDiv.appendChild(div);
             }
@@ -161,8 +186,7 @@
                 if(index < 5) {
                     const nextS = document.getElementById(`yao-${index+1}`);
                     const nextC = document.getElementById(`yao-container-${index+1}`);
-                    nextS.disabled = false;
-                    nextC.classList.add('next-yao-hint');
+                    nextS.disabled = false; nextC.classList.add('next-yao-hint');
                 }
             } else {
                 for(let j=index+1; j<6; j++) {
@@ -230,16 +254,11 @@
             });
         }
 
-        function resetSystem() {
-            if(confirm("確定重置當前占卜輸入？")) {
-                document.getElementById('userName').value = ""; document.getElementById('subject').value = "";
-                initYaoSelectors(); updateProgress(); document.getElementById('resultArea').classList.add('hidden');
-            }
-        }
+        function resetSystem() { if(confirm("確定重置當前輸入？")) { document.getElementById('userName').value = ""; document.getElementById('subject').value = ""; initYaoSelectors(); updateProgress(); document.getElementById('resultArea').classList.add('hidden'); } }
 
-        // 功能保全：匯入匯出與 CSV
+        // 功能保全
         function exportJSON() { const blob = new Blob([JSON.stringify(historyData)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `natural_yijing_backup.json`; a.click(); }
-        function importJSON(event) { const reader = new FileReader(); reader.onload = (e) => { const imported = JSON.parse(e.target.result); historyData = [...historyData, ...imported.filter(i => !new Set(historyData.map(d => d.id)).has(i.id))]; localStorage.setItem('yijing_v21_db', JSON.stringify(historyData)); renderHistory(); alert(`✅ 匯入完成！`); }; reader.readAsText(event.target.files[0]); }
+        function importJSON(event) { const reader = new FileReader(); reader.onload = (e) => { const imported = JSON.parse(e.target.result); historyData = [...historyData, ...imported.filter(i => !new Set(historyData.map(d => d.id)).has(i.id))]; localStorage.setItem('yijing_v21_db', JSON.stringify(historyData)); renderHistory(); alert(`✅ 匯入成功！`); }; reader.readAsText(event.target.files[0]); }
         function exportCSV() { let csv = "\ufeff日期,姓名,主題,本卦,之卦\n"; historyData.forEach(i => csv += `${i.date},${i.name},${i.subject},${i.origName},${i.chanName}\n`); const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `natural_yijing_data.csv`; a.click(); }
         function copyToClipboard() { const text = `【占卜紀錄 - 自然說易 By 天王星】\n姓名：${document.getElementById('userName').value}\n主題：${document.getElementById('subject').value}\n本卦：${document.getElementById('origGuaName').innerText}\n之卦：${document.getElementById('chanGuaName').innerText}`; navigator.clipboard.writeText(text).then(() => alert("📋 複製成功")); }
         function deleteEntry(id) { if(confirm("刪除此紀錄？")) { historyData = historyData.filter(i => i.id !== id); localStorage.setItem('yijing_v21_db', JSON.stringify(historyData)); renderHistory(); } }
