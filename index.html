@@ -4,32 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>自然說易：易經演算系統 V22.51 - By 天王星</title>
-    <meta name="description" content="自然說易：專業、簡潔、免費的線上易經卜卦系統。支援六爻演算、本卦之卦解析、歷史紀錄匯出，提供流暢的數位易經占卜體驗。">
-    <meta name="keywords" content="易經, 卜卦, 占卜, 線上卜卦, 六爻, 自然說易, 天王星, 周易, 數位易經">
+    <title>自然說易：易經演算系統 V22.52 - By 天王星</title>
+    <meta name="description" content="自然說易：專業、簡潔、免費的線上易經卜卦系統。強化文字紀錄與歷史連結功能。">
+    <meta name="keywords" content="易經, 卜卦, 占卜, 線上卜卦, 六爻, 自然說易, 天王星">
     <meta name="author" content="天王星">
-    
     <meta name="google-site-verification" content="uF2V-AUqE4FMZDWEgfxw84J5fyM5m7ZMsAKPJ1HgRxw" />
-
-    <meta property="og:title" content="自然說易：易經演算系統 - By 天王星">
-    <meta property="og:description" content="最簡潔流暢的數位易經工具，支援手機震動與音量回饋，輕鬆記錄每一次占卜靈感。">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://sl7816-stack.github.io/Yi-jing/">
-
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "自然說易：易經演算系統",
-      "operatingSystem": "Web",
-      "applicationCategory": "LifestyleApplication",
-      "author": {
-        "@type": "Person",
-        "name": "天王星"
-      },
-      "description": "提供線上易經六爻卜卦與演算的數位工具，具備歷史紀錄儲存與匯出功能。"
-    }
-    </script>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -49,13 +28,14 @@
         .next-yao-hint { animation: pulse-border 1.5s infinite; border: 2px solid var(--gold-border) !important; background-color: #fff !important; }
         select:disabled { background-color: #f1f5f9; cursor: not-allowed; opacity: 0.6; }
         .gold-card { border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .history-link:hover { text-decoration: underline; color: #b45309; }
     </style>
 </head>
 <body class="p-4 md:p-8">
     <div class="mx-auto max-w-5xl bg-white shadow-2xl rounded-3xl overflow-hidden gold-card">
         <div class="bg-[#1A2F4B] p-6 text-white text-center relative">
-            <h1 class="text-2xl md:text-3xl font-bold italic tracking-tighter">自然說易：易經演算系統 V22.51</h1>
-            <p class="text-slate-400 text-xs mt-1">By 天王星 | 數位演算 · 易學永傳</p>
+            <h1 class="text-2xl md:text-3xl font-bold italic tracking-tighter">自然說易：易經演算系統 V22.52</h1>
+            <p class="text-slate-400 text-xs mt-1">By 天王星 | 物理現實 · 文字定標</p>
             <button onclick="toggleMute()" id="muteBtn" class="absolute right-6 top-1/2 -translate-y-1/2 bg-white/10 p-2 rounded-full transition hover:bg-white/20">
                 <span id="muteIcon">🔊</span>
             </button>
@@ -84,7 +64,6 @@
                 <button onclick="saveCurrentToHistory()" class="bg-amber-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition active:scale-95">💾 儲存紀錄</button>
                 <button onclick="exportJSON()" class="bg-indigo-600 text-white px-4 py-3 rounded-xl font-bold text-sm">📤 匯出備份</button>
                 <label class="bg-indigo-50 text-indigo-700 px-4 py-3 rounded-xl font-bold text-sm cursor-pointer border border-indigo-200">📥 匯入合併 <input type="file" class="hidden" onchange="importJSON(event)"></label>
-                <button onclick="exportCSV()" class="bg-emerald-600 text-white px-4 py-3 rounded-xl font-bold text-sm">📊 CSV</button>
                 <button onclick="copyToClipboard()" class="bg-blue-600 text-white px-4 py-3 rounded-xl font-bold text-sm">📋 複製文字</button>
                 <button onclick="resetSystem()" class="bg-slate-200 text-slate-600 px-4 py-3 rounded-xl font-bold text-sm hover:bg-red-600 hover:text-white">🗑️ 重置</button>
             </div>
@@ -123,21 +102,16 @@
 
             <div class="mt-16 border-t-2 border-slate-100 pt-10">
                 <h2 class="text-2xl font-bold text-slate-800 mb-6">📜 歷史占卜紀錄</h2>
-                <div id="historyContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                <div id="historyContainer" class="flex flex-col gap-3"></div>
             </div>
         </div>
     </div>
 
-    <footer class="max-w-5xl mx-auto mt-8 p-6 text-slate-400 text-sm text-center">
-        <p>關於自然說易：這是一個基於《周易》六爻演算法的數位占卜工具。系統嚴格遵守老陽（9）、少陰（8）、少陽（7）、老陰（6）之成卦原理。By 天王星。</p>
-    </footer>
-
     <script>
         let isMuted = localStorage.getItem('yijing_mute') === 'true';
         function toggleMute() { isMuted = !isMuted; localStorage.setItem('yijing_mute', isMuted); updateMuteUI(); }
-        function updateMuteUI() { document.getElementById('muteIcon').innerText = isMuted ? "🔇" : "🔊"; }
+        function updateMuteUI() { document.getElementById('muteIcon').innerText = isMuted ? "🔊" : "🔇"; }
 
-        // --- 音量 2.5x + 震動 60ms ---
         function playSound(type) {
             if (isMuted) return;
             if (navigator.vibrate) navigator.vibrate(60);
@@ -159,7 +133,6 @@
         let historyData = [];
         const labels = ["初爻", "二爻", "三爻", "四爻", "五爻", "上爻"];
 
-        // 使用 V22.3 的選單樣式，確保描述文字正確
         function initYaoSelectors() {
             const lowDiv = document.getElementById('group-lower'); lowDiv.innerHTML = "";
             const uppDiv = document.getElementById('group-upper'); uppDiv.innerHTML = "";
@@ -190,12 +163,6 @@
                     const nextC = document.getElementById(`yao-container-${index+1}`);
                     nextS.disabled = false; nextC.classList.add('next-yao-hint');
                 }
-            } else {
-                for(let j=index+1; j<6; j++) {
-                    const nS = document.getElementById(`yao-${j}`); nS.value = ""; nS.disabled = true;
-                    document.getElementById(`yao-container-${j}`).classList.remove('next-yao-hint');
-                }
-                container.classList.add('next-yao-hint');
             }
             updateProgress(); run();
         }
@@ -243,24 +210,51 @@
         function saveCurrentToHistory() {
             const yaos = Array.from({length: 6}, (_, i) => document.getElementById(`yao-${i}`).value);
             if(yaos.some(v => v === "")) { alert("請先完成占卜。"); return; }
-            historyData.push({ id: Date.now(), name: document.getElementById('userName').value || "訪客", date: document.getElementById('recordDate').value, subject: document.getElementById('subject').value || "無主題", yaos: yaos, origName: document.getElementById('origGuaName').innerText, chanName: document.getElementById('chanGuaName').innerText });
+            
+            // 獲取當前連結與 ID
+            const getBits = (isC) => yaos.map(v => isC ? ((parseInt(v)===6||parseInt(v)===7)?"1":"0") : ((parseInt(v)===7||parseInt(v)===9)?"1":"0")).join('');
+            const origID = yijingMap[getBits(false)].id;
+            const chanID = yijingMap[getBits(true)].id;
+
+            historyData.push({ 
+                id: Date.now(), 
+                name: document.getElementById('userName').value || "訪客", 
+                date: document.getElementById('recordDate').value, 
+                subject: document.getElementById('subject').value || "無主題", 
+                origName: document.getElementById('origGuaName').innerText, 
+                chanName: document.getElementById('chanGuaName').innerText,
+                origLink: `https://www.eee-learning.com/book/neweee${origID}`,
+                chanLink: `https://www.eee-learning.com/book/neweee${chanID}`
+            });
             localStorage.setItem('yijing_v21_db', JSON.stringify(historyData)); renderHistory(); alert("✅ 紀錄已儲存。");
         }
 
         function renderHistory() {
             const container = document.getElementById('historyContainer'); container.innerHTML = "";
             [...historyData].reverse().forEach(item => {
-                const card = document.createElement('div'); card.className = "bg-white p-4 rounded-2xl border border-slate-200 shadow-sm relative gold-card";
-                card.innerHTML = `<button onclick="deleteEntry(${item.id})" class="absolute top-2 right-2 text-slate-300">×</button><div class="text-xs font-bold text-blue-800">${item.date}</div><div class="font-bold mb-2">${item.name}：${item.subject}</div><div class="flex items-center gap-4 bg-slate-50 p-2 rounded-xl"><div class="flex-1 text-center"><div id="m-o-${item.id}"></div><div class="text-[10px] mt-1">${item.origName}</div></div><div class="text-slate-300">▶</div><div class="flex-1 text-center"><div id="m-c-${item.id}"></div><div class="text-[10px] mt-1">${item.chanName}</div></div></div>`;
-                container.appendChild(card); drawG(`m-o-${item.id}`, item.yaos.map(v=>parseInt(v)), false, true); drawG(`m-c-${item.id}`, item.yaos.map(v=>parseInt(v)), true, true);
+                const card = document.createElement('div');
+                card.className = "bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4 gold-card";
+                card.innerHTML = `
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="bg-blue-100 text-blue-800 text-[10px] px-2 py-0.5 rounded font-bold">${item.date}</span>
+                            <span class="font-bold text-slate-700">${item.name}：${item.subject}</span>
+                        </div>
+                        <div class="text-sm flex gap-3 text-slate-500">
+                            <span>本卦：<a href="${item.origLink}" target="_blank" class="font-bold text-amber-700 history-link">【${item.origName}】</a></span>
+                            <span class="text-slate-300">▶</span>
+                            <span>之卦：<a href="${item.chanLink}" target="_blank" class="font-bold text-emerald-700 history-link">【${item.chanName}】</a></span>
+                        </div>
+                    </div>
+                    <button onclick="deleteEntry(${item.id})" class="text-slate-300 hover:text-red-500 transition px-2">刪除</button>
+                `;
+                container.appendChild(card);
             });
         }
 
         function resetSystem() { if(confirm("確定重置當前輸入？")) { document.getElementById('userName').value = ""; document.getElementById('subject').value = ""; initYaoSelectors(); updateProgress(); document.getElementById('resultArea').classList.add('hidden'); } }
-
         function exportJSON() { const blob = new Blob([JSON.stringify(historyData)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `natural_yijing_backup.json`; a.click(); }
         function importJSON(event) { const reader = new FileReader(); reader.onload = (e) => { const imported = JSON.parse(e.target.result); historyData = [...historyData, ...imported.filter(i => !new Set(historyData.map(d => d.id)).has(i.id))]; localStorage.setItem('yijing_v21_db', JSON.stringify(historyData)); renderHistory(); alert(`✅ 匯入成功！`); }; reader.readAsText(event.target.files[0]); }
-        function exportCSV() { let csv = "\ufeff日期,姓名,主題,本卦,之卦\n"; historyData.forEach(i => csv += `${i.date},${i.name},${i.subject},${i.origName},${i.chanName}\n`); const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `natural_yijing_data.csv`; a.click(); }
         function copyToClipboard() { const text = `【占卜紀錄 - 自然說易 By 天王星】\n姓名：${document.getElementById('userName').value}\n主題：${document.getElementById('subject').value}\n本卦：${document.getElementById('origGuaName').innerText}\n之卦：${document.getElementById('chanGuaName').innerText}`; navigator.clipboard.writeText(text).then(() => alert("📋 複製成功")); }
         function deleteEntry(id) { if(confirm("刪除此紀錄？")) { historyData = historyData.filter(i => i.id !== id); localStorage.setItem('yijing_v21_db', JSON.stringify(historyData)); renderHistory(); } }
 
