@@ -3,13 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>自然說易：易經演算系統 V22.52 - By 天王星</title>
-    <meta name="description" content="自然說易：專業、簡潔、免費的線上易經卜卦系統。強化文字紀錄與歷史連結功能。">
-    <meta name="keywords" content="易經, 卜卦, 占卜, 線上卜卦, 六爻, 自然說易, 天王星">
-    <meta name="author" content="天王星">
+    <title>自然說易：易經演算系統 V22.53 - By 天王星</title>
     <meta name="google-site-verification" content="uF2V-AUqE4FMZDWEgfxw84J5fyM5m7ZMsAKPJ1HgRxw" />
-
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --paper-bg: #F7F3ED; --dai-blue: #1A2F4B; --gold-border: #D4AF37; }
@@ -34,8 +29,8 @@
 <body class="p-4 md:p-8">
     <div class="mx-auto max-w-5xl bg-white shadow-2xl rounded-3xl overflow-hidden gold-card">
         <div class="bg-[#1A2F4B] p-6 text-white text-center relative">
-            <h1 class="text-2xl md:text-3xl font-bold italic tracking-tighter">自然說易：易經演算系統 V22.52</h1>
-            <p class="text-slate-400 text-xs mt-1">By 天王星 | 物理現實 · 文字定標</p>
+            <h1 class="text-2xl md:text-3xl font-bold italic tracking-tighter">自然說易：易經演算系統 V22.53</h1>
+            <p class="text-slate-400 text-xs mt-1">By 天王星 | 連結邏輯修正版</p>
             <button onclick="toggleMute()" id="muteBtn" class="absolute right-6 top-1/2 -translate-y-1/2 bg-white/10 p-2 rounded-full transition hover:bg-white/20">
                 <span id="muteIcon">🔊</span>
             </button>
@@ -108,10 +103,26 @@
     </div>
 
     <script>
+        // 核心資料表 (V21.4 定義)
+        const baguaNames = { "111": "乾(天)", "000": "坤(地)", "110": "兌(澤)", "001": "艮(山)", "101": "離(火)", "010": "坎(水)", "100": "震(雷)", "011": "巽(風)" };
+        const yijingMap = { "111111": { name: "乾為天", id: "01" }, "000111": { name: "天地否", id: "12" }, "110111": { name: "天澤履", id: "10" }, "001111": { name: "天山遯", id: "33" }, "101111": { name: "天火同人", id: "13" }, "010111": { name: "天水訟", id: "06" }, "100111": { name: "天雷无妄", id: "25" }, "011111": { name: "天風姤", id: "44" }, "111000": { name: "地天泰", id: "11" }, "000000": { name: "坤為地", id: "02" }, "110000": { name: "地澤臨", id: "19" }, "001000": { name: "地山謙", id: "15" }, "101000": { name: "地火明夷", id: "36" }, "010000": { name: "地水師", id: "07" }, "100000": { name: "地雷復", id: "24" }, "011000": { name: "地風升", id: "46" }, "111110": { name: "澤天夬", id: "43" }, "000110": { name: "澤地萃", id: "45" }, "110110": { name: "兌為澤", id: "58" }, "001110": { name: "澤山咸", id: "31" }, "101110": { name: "澤火革", id: "49" }, "010110": { name: "澤水困", id: "47" }, "100110": { name: "澤雷隨", id: "17" }, "011110": { name: "澤風大過", id: "28" }, "111001": { name: "山天大畜", id: "26" }, "000001": { name: "山地剝", id: "23" }, "110001": { name: "山澤損", id: "41" }, "001001": { name: "艮為山", id: "52" }, "101001": { name: "山火賁", id: "22" }, "010001": { name: "山水蒙", id: "04" }, "100001": { name: "山雷頤", id: "27" }, "011001": { name: "山風蠱", id: "18" }, "111101": { name: "火天大有", id: "14" }, "000101": { name: "火地晉", id: "35" }, "110101": { name: "火澤睽", id: "38" }, "001101": { name: "火山旅", id: "56" }, "101101": { name: "離為火", id: "30" }, "010101": { name: "火水未濟", id: "64" }, "100101": { name: "火雷噬嗑", id: "21" }, "011101": { name: "火風鼎", id: "50" }, "111010": { name: "水天需", id: "05" }, "000010": { name: "水地比", id: "08" }, "110010": { name: "水澤節", id: "60" }, "001010": { name: "水山蹇", id: "39" }, "101010": { name: "水火既濟", id: "63" }, "010010": { name: "坎為水", id: "29" }, "100010": { name: "水雷屯", id: "03" }, "011010": { name: "水風井", id: "48" }, "111100": { name: "雷天大壯", id: "34" }, "000100": { name: "雷地豫", id: "16" }, "110100": { name: "雷澤歸妹", id: "54" }, "001100": { name: "雷山小過", id: "62" }, "101100": { name: "雷火豐", id: "55" }, "010100": { name: "雷水解", id: "40" }, "100100": { name: "震為雷", id: "51" }, "011100": { name: "雷風恒", id: "32" }, "111011": { name: "風天小畜", id: "09" }, "000011": { name: "風地觀", id: "20" }, "110011": { name: "風澤中孚", id: "61" }, "001011": { name: "風山漸", id: "53" }, "101011": { name: "風火家人", id: "37" }, "010011": { name: "風水渙", id: "59" }, "100011": { name: "風雷益", id: "42" }, "011011": { name: "巽為風", id: "57" } };
+
+        let historyData = [];
+        const labels = ["初爻", "二爻", "三爻", "四爻", "五爻", "上爻"];
         let isMuted = localStorage.getItem('yijing_mute') === 'true';
+
+        // 輔助函式：根據卦名查找 ID 並生成連結 (解決 Github 跳轉問題)
+        function getLinkByGuaName(name) {
+            for (let bits in yijingMap) {
+                if (yijingMap[bits].name === name) {
+                    return `https://www.eee-learning.com/book/neweee${yijingMap[bits].id}`;
+                }
+            }
+            return "#";
+        }
+
         function toggleMute() { isMuted = !isMuted; localStorage.setItem('yijing_mute', isMuted); updateMuteUI(); }
         function updateMuteUI() { document.getElementById('muteIcon').innerText = isMuted ? "🔊" : "🔇"; }
-
         function playSound(type) {
             if (isMuted) return;
             if (navigator.vibrate) navigator.vibrate(60);
@@ -126,12 +137,6 @@
             gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.5);
             osc.start(); osc.stop(ctx.currentTime + 0.5);
         }
-
-        const baguaNames = { "111": "乾(天)", "000": "坤(地)", "110": "兌(澤)", "001": "艮(山)", "101": "離(火)", "010": "坎(水)", "100": "震(雷)", "011": "巽(風)" };
-        const yijingMap = { "111111": { name: "乾為天", id: "01" }, "000111": { name: "天地否", id: "12" }, "110111": { name: "天澤履", id: "10" }, "001111": { name: "天山遯", id: "33" }, "101111": { name: "天火同人", id: "13" }, "010111": { name: "天水訟", id: "06" }, "100111": { name: "天雷无妄", id: "25" }, "011111": { name: "天風姤", id: "44" }, "111000": { name: "地天泰", id: "11" }, "000000": { name: "坤為地", id: "02" }, "110000": { name: "地澤臨", id: "19" }, "001000": { name: "地山謙", id: "15" }, "101000": { name: "地火明夷", id: "36" }, "010000": { name: "地水師", id: "07" }, "100000": { name: "地雷復", id: "24" }, "011000": { name: "地風升", id: "46" }, "111110": { name: "澤天夬", id: "43" }, "000110": { name: "澤地萃", id: "45" }, "110110": { name: "兌為澤", id: "58" }, "001110": { name: "澤山咸", id: "31" }, "101110": { name: "澤火革", id: "49" }, "010110": { name: "澤水困", id: "47" }, "100110": { name: "澤雷隨", id: "17" }, "011110": { name: "澤風大過", id: "28" }, "111001": { name: "山天大畜", id: "26" }, "000001": { name: "山地剝", id: "23" }, "110001": { name: "山澤損", id: "41" }, "001001": { name: "艮為山", id: "52" }, "101001": { name: "山火賁", id: "22" }, "010001": { name: "山水蒙", id: "04" }, "100001": { name: "山雷頤", id: "27" }, "011001": { name: "山風蠱", id: "18" }, "111101": { name: "火天大有", id: "14" }, "000101": { name: "火地晉", id: "35" }, "110101": { name: "火澤睽", id: "38" }, "001101": { name: "火山旅", id: "56" }, "101101": { name: "離為火", id: "30" }, "010101": { name: "火水未濟", id: "64" }, "100101": { name: "火雷噬嗑", id: "21" }, "011101": { name: "火風鼎", id: "50" }, "111010": { name: "水天需", id: "05" }, "000010": { name: "水地比", id: "08" }, "110010": { name: "水澤節", id: "60" }, "001010": { name: "水山蹇", id: "39" }, "101010": { name: "水火既濟", id: "63" }, "010010": { name: "坎為水", id: "29" }, "100010": { name: "水雷屯", id: "03" }, "011010": { name: "水風井", id: "48" }, "111100": { name: "雷天大壯", id: "34" }, "000100": { name: "雷地豫", id: "16" }, "110100": { name: "雷澤歸妹", id: "54" }, "001100": { name: "雷山小過", id: "62" }, "101100": { name: "雷火豐", id: "55" }, "010100": { name: "雷水解", id: "40" }, "100100": { name: "震為雷", id: "51" }, "011100": { name: "雷風恒", id: "32" }, "111011": { name: "風天小畜", id: "09" }, "000011": { name: "風地觀", id: "20" }, "110011": { name: "風澤中孚", id: "61" }, "001011": { name: "風山漸", id: "53" }, "101011": { name: "風火家人", id: "37" }, "010011": { name: "風水渙", id: "59" }, "100011": { name: "風雷益", id: "42" }, "011011": { name: "巽為風", id: "57" } };
-
-        let historyData = [];
-        const labels = ["初爻", "二爻", "三爻", "四爻", "五爻", "上爻"];
 
         function initYaoSelectors() {
             const lowDiv = document.getElementById('group-lower'); lowDiv.innerHTML = "";
@@ -196,7 +201,7 @@
         }
 
         function drawG(id, data, isC, mini = false) {
-            const el = document.getElementById(id); el.innerHTML = "";
+            const el = document.getElementById(id); if(!el) return; el.innerHTML = "";
             [5,4,3,2,1,0].forEach(idx => {
                 let v = data[idx]; let isY = isC ? (v===6||v===7) : (v===7||v===9);
                 const d = document.createElement('div');
@@ -210,12 +215,6 @@
         function saveCurrentToHistory() {
             const yaos = Array.from({length: 6}, (_, i) => document.getElementById(`yao-${i}`).value);
             if(yaos.some(v => v === "")) { alert("請先完成占卜。"); return; }
-            
-            // 獲取當前連結與 ID
-            const getBits = (isC) => yaos.map(v => isC ? ((parseInt(v)===6||parseInt(v)===7)?"1":"0") : ((parseInt(v)===7||parseInt(v)===9)?"1":"0")).join('');
-            const origID = yijingMap[getBits(false)].id;
-            const chanID = yijingMap[getBits(true)].id;
-
             historyData.push({ 
                 id: Date.now(), 
                 name: document.getElementById('userName').value || "訪客", 
@@ -223,8 +222,7 @@
                 subject: document.getElementById('subject').value || "無主題", 
                 origName: document.getElementById('origGuaName').innerText, 
                 chanName: document.getElementById('chanGuaName').innerText,
-                origLink: `https://www.eee-learning.com/book/neweee${origID}`,
-                chanLink: `https://www.eee-learning.com/book/neweee${chanID}`
+                yaos: yaos // 確保儲存原始爻位數據
             });
             localStorage.setItem('yijing_v21_db', JSON.stringify(historyData)); renderHistory(); alert("✅ 紀錄已儲存。");
         }
@@ -234,6 +232,11 @@
             [...historyData].reverse().forEach(item => {
                 const card = document.createElement('div');
                 card.className = "bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4 gold-card";
+                
+                // 動態計算連結，確保舊紀錄也能點向正確 URL
+                const oLink = getLinkByGuaName(item.origName);
+                const cLink = getLinkByGuaName(item.chanName);
+
                 card.innerHTML = `
                     <div class="flex-1">
                         <div class="flex items-center gap-2 mb-1">
@@ -241,9 +244,9 @@
                             <span class="font-bold text-slate-700">${item.name}：${item.subject}</span>
                         </div>
                         <div class="text-sm flex gap-3 text-slate-500">
-                            <span>本卦：<a href="${item.origLink}" target="_blank" class="font-bold text-amber-700 history-link">【${item.origName}】</a></span>
+                            <span>本卦：<a href="${oLink}" target="_blank" class="font-bold text-amber-700 history-link">【${item.origName}】</a></span>
                             <span class="text-slate-300">▶</span>
-                            <span>之卦：<a href="${item.chanLink}" target="_blank" class="font-bold text-emerald-700 history-link">【${item.chanName}】</a></span>
+                            <span>之卦：<a href="${cLink}" target="_blank" class="font-bold text-emerald-700 history-link">【${item.chanName}】</a></span>
                         </div>
                     </div>
                     <button onclick="deleteEntry(${item.id})" class="text-slate-300 hover:text-red-500 transition px-2">刪除</button>
